@@ -31,6 +31,8 @@ from .resources import *
 from .mohid_grd_generator_dialog import mohid_grd_generatorDialog
 import os.path
 
+from .MohidGrid import MohidGrid
+from qgis.core import QgsPoint, QgsProject
 
 class mohid_grd_generator:
     """QGIS Plugin Implementation."""
@@ -188,6 +190,10 @@ class mohid_grd_generator:
         if self.first_start == True:
             self.first_start = False
             self.dlg = mohid_grd_generatorDialog()
+            self.dlg.mQgsSpinBoxColumns.setMinimum(1)
+            self.dlg.mQgsSpinBoxRows.setMinimum(1)
+            self.dlg.mQgsSpinBoxColumns.setMaximum(999999)
+            self.dlg.mQgsSpinBoxRows.setMaximum(999999)
 
         # show the dialog
         self.dlg.show()
@@ -197,4 +203,15 @@ class mohid_grd_generator:
         if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            pass
+            originX = float(self.dlg.lineEditOriginX.text())
+            originY = float(self.dlg.lineEditOriginY.text())
+            origin = QgsPoint(originX, originY)
+            nColumns = self.dlg.mQgsSpinBoxColumns.value()
+            nRows = self.dlg.mQgsSpinBoxRows.value()
+            dX = float(self.dlg.lineEditDX.text())
+            dY = float(self.dlg.lineEditDY.text())
+            angle = float(self.dlg.lineEditAngle.text())
+            mohidGrid = MohidGrid(origin, nColumns, nRows, dX, dY, angle)
+            layer = mohidGrid.toQgsVectorLayer()
+            QgsProject.instance().addMapLayer(layer)
+            #pass

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>580</width>
-    <height>489</height>
+    <width>578</width>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="lineEditOriginX"/>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_4">
@@ -57,7 +57,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit_2"/>
+     <widget class="QLineEdit" name="lineEditOriginY"/>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label">
@@ -67,7 +67,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox_2"/>
+     <widget class="QgsSpinBox" name="mQgsSpinBoxColumns"/>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label_2">
@@ -75,9 +75,6 @@
        <string>Rows:</string>
       </property>
      </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QgsDoubleSpinBox" name="mQgsDoubleSpinBox"/>
     </item>
     <item row="4" column="0">
      <widget class="QLabel" name="label_5">
@@ -87,7 +84,7 @@
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QLineEdit" name="lineEdit_3"/>
+     <widget class="QLineEdit" name="lineEditDX"/>
     </item>
     <item row="5" column="0">
      <widget class="QLabel" name="label_6">
@@ -97,7 +94,7 @@
      </widget>
     </item>
     <item row="5" column="1">
-     <widget class="QLineEdit" name="lineEdit_4"/>
+     <widget class="QLineEdit" name="lineEditDY"/>
     </item>
     <item row="6" column="0">
      <widget class="QLabel" name="label_7">
@@ -107,11 +104,14 @@
      </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QLineEdit" name="lineEdit_5">
+     <widget class="QLineEdit" name="lineEditAngle">
       <property name="inputMask">
        <string/>
       </property>
      </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QgsSpinBox" name="mQgsSpinBoxRows"/>
     </item>
    </layout>
   </widget>
@@ -208,16 +208,26 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QgsDoubleSpinBox</class>
-   <extends>QDoubleSpinBox</extends>
-   <header>qgsdoublespinbox.h</header>
-  </customwidget>
-  <customwidget>
    <class>QgsExternalResourceWidget</class>
    <extends>QWidget</extends>
    <header>qgsexternalresourcewidget.h</header>
   </customwidget>
+  <customwidget>
+   <class>QgsSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>qgsspinbox.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>lineEditOriginX</tabstop>
+  <tabstop>lineEditOriginY</tabstop>
+  <tabstop>mQgsSpinBoxColumns</tabstop>
+  <tabstop>mQgsSpinBoxRows</tabstop>
+  <tabstop>lineEditDX</tabstop>
+  <tabstop>lineEditDY</tabstop>
+  <tabstop>lineEditAngle</tabstop>
+  <tabstop>pushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
