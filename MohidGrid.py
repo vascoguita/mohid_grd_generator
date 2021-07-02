@@ -61,7 +61,7 @@ class MohidGrid:
         return self.getNRows() * self.getDY()
     
     def toQgsVectorLayer(self) -> QgsVectorLayer:
-        layer = QgsVectorLayer("MultiLineString?crs=epsg:3857", "MOHID grid", "memory")
+        layer = QgsVectorLayer("MultiLineString?crs=epsg:4327", "MOHID grid", "memory")
         provider = layer.dataProvider()
         feature = QgsFeature()
         feature.setGeometry(self.toQgsMultiLineString())
