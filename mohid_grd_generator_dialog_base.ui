@@ -28,8 +28,8 @@
         <widget class="QGroupBox" name="groupBox_4">
          <property name="font">
           <font>
-           <weight>50</weight>
-           <bold>false</bold>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
          </property>
          <property name="title">
@@ -341,6 +341,12 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
             </property>
            </widget>
           </item>
