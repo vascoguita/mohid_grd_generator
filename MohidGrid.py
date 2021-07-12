@@ -1,4 +1,4 @@
-from qgis.core import QgsPoint, QgsLineString, QgsMultiLineString, QgsFeature, QgsVectorLayer
+from qgis.core import QgsPoint, QgsLineString, QgsMultiLineString, QgsFeature, QgsVectorLayer, QgsMultiPolygon, QgsPolygon
 import math
 
 class MohidGrid:
@@ -61,41 +61,38 @@ class MohidGrid:
         return self.getNRows() * self.getDY()
     
     def toQgsVectorLayer(self) -> QgsVectorLayer:
-        layer = QgsVectorLayer("MultiLineString?crs=epsg:4327", "MOHID grid", "memory")
+        layer = QgsVectorLayer("MultiPolygon?crs=epsg:4327", "MOHID grid", "memory")
         provider = layer.dataProvider()
         feature = QgsFeature()
-        feature.setGeometry(self.toQgsMultiLineString())
+        feature.setGeometry(self.toQgsMultiPolygon())
+#       feature.setGeometry(self.toQgsMultiLineString()) #Changed to Polygon
         provider.addFeatures([feature])
         layer.updateExtents()
         return layer
 
-    def toQgsMultiLineString(self) -> QgsMultiLineString:
-        multiLine = QgsMultiLineString()
+    #Might be generating too many vertexes
+    def toQgsMultiPolygon(self) -> QgsMultiPolygon:
+        multiPoly = QgsMultiPolygon()
         originX = self.getOrigin().x()
         originY = self.getOrigin().y()
         cos = math.cos(math.radians(self.getAngle()))
         sin = math.sin(math.radians(self.getAngle()))
 
-        nVerticalLines = self.getNColumns() + 1
+        nVerticalLines = self.getNColumns()
         dX = self.getDX()
-        height = self.getHeight()
+        nHorizontalLines = self.getNRows()
+        dY = self.getDY()
 
         for verticalLine in range(nVerticalLines):
-            offsetX = dX * verticalLine
-            a = QgsPoint(originX + (offsetX * cos), originY + (offsetX * sin))
-            b = QgsPoint(originX + (offsetX * cos) - (height * sin), originY + (offsetX * sin) + (height * cos))
-            line = QgsLineString([a, b])
-            multiLine.addGeometry(line)
+            for horizontalLine in range(nHorizontalLines):
+                offsetX = dX * verticalLine
+                offsetY = dY * horizontalLine
+                a = QgsPoint(originX + (offsetX * cos), originY + (offsetX * sin))
+                b = QgsPoint(originX + (offsetX + dX) * cos, originY + (offsetX + dX) * sin)
+                c = QgsPoint(originX - (offsetY + dY) * sin + (offsetX + dX) * cos, originY + (offsetY + dY) * cos + (offsetX + dX) * sin)
+                d = QgsPoint(originX - (offsetY + dY) * sin, originY + (offsetY + dY) * cos)
+                line = QgsLineString([a, b, c, d])
+                square = QgsPolygon(line)
+                multiPoly.addGeometry(square)
 
-        nHorizontalLines = self.getNRows() + 1
-        dY = self.getDY()
-        width = self.getWidth()
-
-        for horizontalLine in range(nHorizontalLines):
-            offsetY = dY * horizontalLine
-            a = QgsPoint(originX - (offsetY * sin), originY + (offsetY * cos))
-            b = QgsPoint(originX + (width * cos) - (offsetY * sin), originY + (width * sin) + (offsetY * cos))
-            line = QgsLineString([a, b])
-            multiLine.addGeometry(line)
-
-        return multiLine
+        return multiPoly

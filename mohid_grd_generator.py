@@ -32,6 +32,7 @@ from .mohid_grd_generator_dialog import mohid_grd_generatorDialog
 import os.path
 
 from .MohidGrid import MohidGrid
+from .MohidVariableSpacedGrid import MohidVariableGrid
 from qgis.core import QgsPoint, QgsProject
 
 class mohid_grd_generator:
@@ -64,6 +65,8 @@ class mohid_grd_generator:
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&MOHID Grid Generator')
+        self.XX = []
+        self.YY = []
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
@@ -181,6 +184,21 @@ class mohid_grd_generator:
                 action)
             self.iface.removeToolBarIcon(action)
 
+    #Add XX and YY values with cell tool
+    def addCellTool(self):
+        celln = self.dlg.mQgsSpinBoxCellNum.value()
+        range_init = float(self.dlg.lineEditRangeInit.text())
+        step = (float(self.dlg.lineEditRangeFin.text()) - float(self.dlg.lineEditRangeInit.text()))/celln
+        vals = []
+        for i in range(celln):
+            vals += [range_init + step * i]
+        if self.dlg.mQgsComboBoxAxis.currentText() == 'X':
+            self.XX += vals
+        else:
+            self.YY += vals
+        self.dlg.lineEditRangeInit.clear()
+        self.dlg.lineEditRangeFin.clear()
+        self.dlg.mQgsSpinBoxCellNum.setValue(1)
 
     def run(self):
         """Run method that performs all the real work"""
@@ -190,10 +208,14 @@ class mohid_grd_generator:
         if self.first_start == True:
             self.first_start = False
             self.dlg = mohid_grd_generatorDialog()
+            self.dlg.mQgsSpinBoxCellNum.setMinimum(1)
+            self.dlg.mQgsSpinBoxCellNum.setMaximum(999999)
+            self.dlg.mQgsPushButtonAdd.clicked.connect(self.addCellTool)
             self.dlg.mQgsSpinBoxColumns.setMinimum(1)
             self.dlg.mQgsSpinBoxRows.setMinimum(1)
             self.dlg.mQgsSpinBoxColumns.setMaximum(999999)
             self.dlg.mQgsSpinBoxRows.setMaximum(999999)
+            self.dlg.tabWidget.setCurrentIndex(0)
 
         # show the dialog
         self.dlg.show()
@@ -203,15 +225,27 @@ class mohid_grd_generator:
         if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            originX = float(self.dlg.lineEditOriginX.text())
-            originY = float(self.dlg.lineEditOriginY.text())
-            origin = QgsPoint(originX, originY)
-            nColumns = self.dlg.mQgsSpinBoxColumns.value()
-            nRows = self.dlg.mQgsSpinBoxRows.value()
-            dX = float(self.dlg.lineEditDX.text())
-            dY = float(self.dlg.lineEditDY.text())
-            angle = float(self.dlg.lineEditAngle.text())
-            mohidGrid = MohidGrid(origin, nColumns, nRows, dX, dY, angle)
-            layer = mohidGrid.toQgsVectorLayer()
-            QgsProject.instance().addMapLayer(layer)
+            if (self.dlg.tabWidget.currentIndex() == 0):
+                originX = float(self.dlg.lineEditOriginX.text())
+                originY = float(self.dlg.lineEditOriginY.text())
+                origin = QgsPoint(originX, originY)
+                nColumns = self.dlg.mQgsSpinBoxColumns.value()
+                nRows = self.dlg.mQgsSpinBoxRows.value()
+                dX = float(self.dlg.lineEditDX.text())
+                dY = float(self.dlg.lineEditDY.text())
+                angle = float(self.dlg.lineEditAngle.text())
+                mohidGrid = MohidGrid(origin, nColumns, nRows, dX, dY, angle)
+                layer = mohidGrid.toQgsVectorLayer()
+                QgsProject.instance().addMapLayer(layer)
+
+            elif (self.dlg.tabWidget.currentIndex() == 1):
+                originX = float(self.dlg.lineEditOriginXIrr.text())
+                originY = float(self.dlg.lineEditOriginYIrr.text())
+                origin = QgsPoint(originX, originY)
+                angle = float(self.dlg.lineEditAngleIrr.text())
+                mohidVariableGrid = MohidVariableGrid(origin, self.XX, self.YY, angle)
+                layer = mohidVariableGrid.toQgsVectorLayer()
+                QgsProject.instance().addMapLayer(layer)
+                self.XX = []
+                self.YY = []
             #pass

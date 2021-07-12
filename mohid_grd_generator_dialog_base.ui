@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>319</width>
-    <height>299</height>
+    <height>373</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_1">
       <attribute name="title">
@@ -236,7 +236,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="lineEditOriginX_a">
+           <widget class="QLineEdit" name="lineEditOriginXIrr">
             <property name="font">
              <font>
               <weight>50</weight>
@@ -259,7 +259,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEditOriginY_a">
+           <widget class="QLineEdit" name="lineEditOriginYIrr">
             <property name="font">
              <font>
               <weight>50</weight>
@@ -282,7 +282,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEditAngle_3">
+           <widget class="QLineEdit" name="lineEditAngleIrr">
             <property name="font">
              <font>
               <weight>50</weight>
@@ -313,7 +313,7 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="2" column="4">
-           <widget class="QPushButton" name="mQgsPushButtonAdd_2">
+           <widget class="QPushButton" name="mQgsPushButtonAdd">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -335,17 +335,23 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QgsSpinBox" name="mQgsSpinBox">
+           <widget class="QgsSpinBox" name="mQgsSpinBoxCellNum">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
            </widget>
           </item>
           <item row="2" column="3">
-           <widget class="QLineEdit" name="lineEditRangeFin_2">
+           <widget class="QLineEdit" name="lineEditRangeFin">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -399,7 +405,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEditRangeInit_2">
+           <widget class="QLineEdit" name="lineEditRangeInit">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -434,7 +440,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="mQgsComboBoxAxis_2">
+           <widget class="QComboBox" name="mQgsComboBoxAxis">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -479,7 +485,7 @@
            </widget>
           </item>
           <item row="1" column="4">
-           <widget class="QComboBox" name="mQgsComboBoxPosition_2">
+           <widget class="QComboBox" name="mQgsComboBoxPosition">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
