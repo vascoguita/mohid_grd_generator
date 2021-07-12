@@ -63,16 +63,8 @@ class MohidGrid:
     def toQgsVectorLayer(self) -> QgsVectorLayer:
         layer = QgsVectorLayer("MultiPolygon?crs=epsg:4327", "MOHID grid", "memory")
         provider = layer.dataProvider()
-        feature = QgsFeature()
-        feature.setGeometry(self.toQgsMultiPolygon())
-#       feature.setGeometry(self.toQgsMultiLineString()) #Changed to Polygon
-        provider.addFeatures([feature])
-        layer.updateExtents()
-        return layer
+        features = []
 
-    #Might be generating too many vertexes
-    def toQgsMultiPolygon(self) -> QgsMultiPolygon:
-        multiPoly = QgsMultiPolygon()
         originX = self.getOrigin().x()
         originY = self.getOrigin().y()
         cos = math.cos(math.radians(self.getAngle()))
@@ -87,12 +79,16 @@ class MohidGrid:
             for horizontalLine in range(nHorizontalLines):
                 offsetX = dX * verticalLine
                 offsetY = dY * horizontalLine
-                a = QgsPoint(originX + (offsetX * cos), originY + (offsetX * sin))
-                b = QgsPoint(originX + (offsetX + dX) * cos, originY + (offsetX + dX) * sin)
+                a = QgsPoint(originX + (offsetX * cos) - (offsetY * sin), originY + (offsetY * cos) + (offsetX * sin))
+                b = QgsPoint(originX + (offsetX + dX) * cos - (offsetY * sin), originY + (offsetY * cos) + (offsetX + dX) * sin)
                 c = QgsPoint(originX - (offsetY + dY) * sin + (offsetX + dX) * cos, originY + (offsetY + dY) * cos + (offsetX + dX) * sin)
-                d = QgsPoint(originX - (offsetY + dY) * sin, originY + (offsetY + dY) * cos)
+                d = QgsPoint(originX - (offsetY + dY) * sin + (offsetX * cos), originY + (offsetY + dY) * cos + + (offsetX * sin))
                 line = QgsLineString([a, b, c, d])
                 square = QgsPolygon(line)
-                multiPoly.addGeometry(square)
+                feature = QgsFeature()
+                feature.setGeometry(square)
+                features += [feature]
 
-        return multiPoly
+        provider.addFeatures(features)
+        layer.updateExtents()
+        return layer

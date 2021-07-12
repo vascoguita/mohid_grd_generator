@@ -41,15 +41,7 @@ class MohidVariableGrid:
     def toQgsVectorLayer(self) -> QgsVectorLayer:
         layer = QgsVectorLayer("MultiPolygon?crs=epsg:4327", "MOHID variable spaced grid", "memory")
         provider = layer.dataProvider()
-        feature = QgsFeature()
-        feature.setGeometry(self.toQgsMultiPolygon())
-        provider.addFeatures([feature])
-        layer.updateExtents()
-        return layer
-
-    #Is generating too many vertexes
-    def toQgsMultiPolygon(self) -> QgsMultiPolygon:
-        multiPoly = QgsMultiPolygon()
+        features = []
         originX = self.getOrigin().x()
         originY = self.getOrigin().y()
         XX = self.getXX()
@@ -57,17 +49,22 @@ class MohidVariableGrid:
         cos = math.cos(math.radians(self.getAngle()))
         sin = math.sin(math.radians(self.getAngle()))
         sumX = 0
+
         for x in range(len(XX)):
             sumY = 0
             for y in range(len(YY)):
-                a = QgsPoint(originX + (sumX * cos), originY + (sumX * sin))
-                b = QgsPoint(originX + (sumX + XX[x]) * cos, originY + (sumX + XX[x]) * sin)
-                c = QgsPoint(originX - (sumY + YY[y]) * sin + (sumX + XX[x]) * cos, originY + (sumY + YY[y]) * cos + (sumX + XX[x]) * sin)
-                d = QgsPoint(originX - (sumY + YY[y]) * sin, originY + (sumY + YY[y]) * cos)
+                a = QgsPoint(originX + (sumX * cos) - (sumY * sin), originY + (sumX * sin) + (sumY * cos))
+                b = QgsPoint(originX + (sumX + XX[x]) * cos - (sumY * sin), originY + (sumX + XX[x]) * sin + (sumY * cos))
+                c = QgsPoint(originX + (sumX + XX[x]) * cos - (sumY + YY[y]) * sin, originY + (sumX + XX[x]) * sin + (sumY + YY[y]) * cos)
+                d = QgsPoint(originX + (sumX * cos)- (sumY + YY[y]) * sin, originY + (sumX * sin) + (sumY + YY[y]) * cos)
                 line = QgsLineString([a, b, c, d])
                 square = QgsPolygon(line)
-                multiPoly.addGeometry(square)
+                feature = QgsFeature()
+                feature.setGeometry(square)
+                features += [feature]
                 sumY += YY[y]
             sumX += XX[x]
 
-        return multiPoly
+        provider.addFeatures(features)
+        layer.updateExtents()
+        return layer
